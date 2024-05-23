@@ -1,0 +1,18 @@
+body {
+    font-size: 1.25rem;
+    height: 100%;
+}
+
+.avatar {
+    max-width: 100%;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 93vh;
+}
+
+.content {
+    flex: 1;
+}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if current_user.is_authenticated %}
+        <div class="alert alert-success text-center mt-3" role="alert">
+            Привет, {{ current_user.login }}!
+        </div>
+    {% else %}
+        <div class="alert alert-danger text-center mt-3" role="alert">
+            Вы не авторизованы!
+        </div>
+    {% endif %}
+{% endblock %}
