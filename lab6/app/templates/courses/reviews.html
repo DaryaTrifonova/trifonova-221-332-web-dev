@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-5">Отзывы о курсе {{ course.name }}</h1>
+
+    <form class="mt-3 mb-3" method="get">
+        <div class="input-group">
+            <label class="input-group-text" for="sort">Сортировать по:</label>
+            <select class="form-select" name="sort" id="sort">
+                <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>По новизне</option>
+                <option value="positive" {% if sort_order == 'positive' %}selected{% endif %}>Сначала положительные</option>
+                <option value="negative" {% if sort_order == 'negative' %}selected{% endif %}>Сначала отрицательные</option>
+            </select>
+            <button class="btn btn-primary" type="submit">Применить</button>
+        </div>
+    </form>
+
+    <ul class="list-group">
+        {% for review in reviews %}
+            <li class="list-group-item">
+                <div class="mb-2">
+                    <strong>{{ review.user.full_name }}</strong> ({{ review.created_at }}):
+                    {% if review.rating == 5 %}
+                        Оценка: Отлично
+                    {% elif review.rating == 4 %}
+                        Оценка: Хорошо
+                    {% elif review.rating == 3 %}
+                        Оценка: Удовлетворительно
+                    {% elif review.rating == 2 %}
+                        Оценка: Неудовлетворительно
+                    {% elif review.rating == 1 %}
+                        Оценка: Плохо
+                    {% elif review.rating == 0 %}
+                        Оценка: Ужасно
+                    {% endif %}
+                </div>
+                <p>{{ review.text }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <nav aria-label="Page navigation mt-5">
+        <ul class="pagination justify-content-center">
+            {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('show_all_reviews', course_id=course.id, sort=sort_order, page=pagination.prev_num) }}">Предыдущая</a>
+                </li>
+            {% endif %}
+            {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('show_all_reviews', course_id=course.id, sort=sort_order, page=pagination.next_num) }}">Следующая</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="container mt-5">
+        <h2 class="mt-3">Добавить отзыв</h2>
+
+        <form method="post" action="{{ url_for('courses.new_review', course_id=course.id) }}">
+            {{ form.hidden_tag() }}
+            <div class="row justify-content-center mt-5">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="rating">Оценка:</label>
+                        <select class="form-control" id="rating" name="rating">
+                            <option value="5">Отлично</option>
+                            <option value="4">Хорошо</option>
+                            <option value="3">Удовлетворительно</option>
+                            <option value="2">Неудовлетворительно</option>
+                            <option value="1">Плохо</option>
+                            <option value="0">Ужасно</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="text">Текст отзыва:</label>
+                        <textarea class="form-control" id="text" name="text" rows="4"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6 mt-3 mb-5">
+                    <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="container mb-5">
+        <div class="btn-group d-flex" role="group" aria-label="Кнопки для навигации">
+            <a class="btn btn-lg btn-dark flex-fill" href="{{ url_for('courses.show', course_id=course.id)}}">Вернуться к курсу</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
